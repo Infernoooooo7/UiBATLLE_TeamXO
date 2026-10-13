@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0c">
+  <meta name="description" content="Pixel Arena — a curated store for PC, PlayStation and Xbox games.">
+  <title>Pixel Arena — PC, PlayStation &amp; Xbox games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://shared.steamstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Archivo, subset to the wordmark's letters, so the logo matches the desktop Pixel Arena logo -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62,820;100,500&text=PIXELARNpixelarn&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body class="xo">
+  <div class="app" id="app">
+
+    <header class="topbar" id="topbar">
+      <a class="brand" href="#/store" aria-label="Pixel Arena — home">
+        <span class="brand-mark" aria-hidden="true">Pi<span>x</span>el</span>
+        <span class="brand-word" aria-hidden="true">Arena</span>
+      </a>
+      <span class="topbar-counter" id="hero-counter" aria-hidden="true"></span>
+    </header>
+
+    <!-- STORE -->
+    <main class="view is-active" id="view-store" data-view="store">
+      <section class="hero" aria-roledescription="carousel" aria-label="Featured games">
+        <div class="hero-rail" id="hero-rail"></div>
+        <div class="hero-progress" id="hero-progress" role="tablist" aria-label="Choose featured game"></div>
+      </section>
+
+      <section class="discover" aria-labelledby="discover-title">
+        <div class="section-head">
+          <h2 class="section-title" id="discover-title">Discover</h2>
+          <span class="section-count" id="grid-count"></span>
+        </div>
+        <div class="platforms" data-platforms role="tablist" aria-label="Filter by platform"></div>
+        <div class="grid" id="grid"></div>
+      </section>
+    </main>
+
+    <!-- SEARCH -->
+    <main class="view" id="view-search" data-view="search" hidden>
+      <div class="search-head">
+        <h1 class="view-title">Search</h1>
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+          <input id="search-input" type="search" placeholder="Games, studios, genres" autocomplete="off" enterkeyhint="search" aria-label="Search games">
+          <button class="search-clear" id="search-clear" type="button" aria-label="Clear search" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>
+          </button>
+        </label>
+        <div class="platforms" data-platforms role="tablist" aria-label="Filter by platform"></div>
+      </div>
+      <div class="search-body" id="search-body"></div>
+    </main>
+
+    <!-- LIBRARY -->
+    <main class="view" id="view-library" data-view="library" hidden>
+      <div class="library-head">
+        <h1 class="view-title">Library</h1>
+        <span class="section-count" id="library-count"></span>
+      </div>
+      <div class="library-body" id="library-body"></div>
+    </main>
+
+    <!-- FRIENDS & PLAYING TOGETHER -->
+    <main class="view" id="view-friends" data-view="friends" hidden>
+      <div class="library-head">
+        <h1 class="view-title">Friends</h1>
+        <span class="section-count" id="fx-online"></span>
+      </div>
+      <div class="fx-body" id="friends-body"></div>
+    </main>
+
+    <nav class="tabbar" aria-label="Primary">
+      <a class="tab" href="#/store" data-tab="store">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.2L12 4l8 6.2V20h-5.4v-5.6H9.4V20H4z"/></svg>
+        <span>Store</span>
+      </a>
+      <a class="tab" href="#/search" data-tab="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        <span>Search</span>
+      </a>
+      <a class="tab" href="#/friends" data-tab="friends">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.2 19.5c.6-3.3 2.9-5.2 5.8-5.2s5.2 1.9 5.8 5.2"/><circle cx="16.8" cy="9.2" r="2.6"/><path d="M16.4 13.9c2.4-.1 4.2 1.6 4.6 4.4"/></svg>
+        <span>Friends</span>
+        <b class="tab-badge" id="fx-badge" hidden></b>
+      </a>
+      <a class="tab" href="#/library" data-tab="library">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="3.6" height="16" rx=".6"/><rect x="9.6" y="4" width="3.6" height="16" rx=".6"/><path d="M15.2 5.4l3.3-.9 3.6 14.6-3.3.9z"/></svg>
+        <span>Library</span>
+        <b class="tab-badge" id="tab-badge" hidden></b>
+      </a>
+    </nav>
+  </div>
+
+  <!-- GAME DETAILS -->
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+    <div class="sheet-scroll" id="sheet-scroll"></div>
+    <div class="sheet-bar" id="sheet-bar"></div>
+  </div>
+
+  <!-- TRAILER -->
+  <div class="player" id="player" role="dialog" aria-modal="true" aria-label="Trailer" hidden>
+    <div class="player-top">
+      <div class="player-meta">
+        <span class="player-kicker" id="player-kicker">Trailer</span>
+        <strong class="player-title" id="player-title"></strong>
+      </div>
+      <button class="icon-btn" type="button" id="player-close" aria-label="Close trailer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="player-stage" id="player-stage">
+      <video id="player-video" controls playsinline preload="none"></video>
+      <div class="player-fallback" id="player-fallback" hidden>
+        <p class="player-fallback-title">Trailer unavailable</p>
+        <p class="player-fallback-text" id="player-fallback-text">We couldn't load this video stream. Check your connection and try again.</p>
+      </div>
+    </div>
+    <p class="player-note">Official trailer, streamed from the Steam store.</p>
+  </div>
+
+  <!-- LOBBY / INVITE SHEET -->
+  <div class="psheet" id="psheet" hidden>
+    <div class="psheet-panel" id="psheet-panel" role="dialog" aria-modal="true" aria-labelledby="psheet-title"></div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toast-text"></span>
+    <a href="#/library" id="toast-link">View</a>
+  </div>
+
+  <script src="data/games.js"></script>
+  <script src="data/social.js"></script>
+  <script src="mobile.js"></script>
+</body>
+</html>
