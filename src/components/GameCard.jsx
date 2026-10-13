@@ -1,13 +1,18 @@
 import { useState } from 'react';
+import { useTrailerPreview } from '../hooks/useTrailerPreview';
 import { IconCheck, IconPlus } from './Icons';
 import { Platforms, Price } from './GameBits';
 import './GameCard.css';
 
 export default function GameCard({ game, owned, onOpen, onToggleLibrary, footer }) {
   const [broken, setBroken] = useState(false);
+  const preview = useTrailerPreview(game.trailer?.src);
 
   return (
-    <article className={`card${owned ? ' is-owned' : ''}`}>
+    <article
+      className={`card${owned ? ' is-owned' : ''}${preview.playing ? ' is-previewing' : ''}`}
+      {...preview.triggers}
+    >
       <div className="card__media">
         {broken ? (
           <div className="card__fallback">
@@ -17,10 +22,18 @@ export default function GameCard({ game, owned, onOpen, onToggleLibrary, footer 
         ) : (
           <img src={game.art.cover} alt="" loading="lazy" decoding="async" onError={() => setBroken(true)} />
         )}
+        {preview.mounted && <video key={preview.run} className="card__video" {...preview.videoProps} />}
         {game.discount > 0 && <span className="card__badge">−{game.discount}%</span>}
       </div>
 
-      <button type="button" className="card__hit" onClick={() => onOpen(game.id)}>
+      <button
+        type="button"
+        className="card__hit"
+        onClick={() => {
+          preview.stop();
+          onOpen(game.id);
+        }}
+      >
         <span className="visually-hidden">{game.title} — view details</span>
       </button>
 
