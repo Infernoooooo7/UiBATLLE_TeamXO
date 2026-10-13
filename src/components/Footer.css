@@ -1,0 +1,40 @@
+.footer {
+  border-top: 1px solid var(--line);
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+  padding-block: 40px 48px;
+}
+
+.footer__tagline {
+  margin-top: 8px;
+  font-size: 13.5px;
+  color: var(--text-3);
+}
+
+.footer__note {
+  max-width: 64ch;
+  justify-self: center;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-3);
+}
+
+@media (max-width: 800px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .footer__note {
+    justify-self: start;
+  }
+
+  .footer__top {
+    justify-self: start;
+  }
+}

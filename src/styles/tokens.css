@@ -1,0 +1,50 @@
+/* Design tokens — shared by desktop and mobile layouts. */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces: warm near-blacks, stepped for elevation */
+  --bg: #0a0a0b;
+  --bg-raised: #101012;
+  --surface: #151517;
+  --surface-2: #1c1c1f;
+  --surface-3: #252529;
+
+  /* Hairlines */
+  --line: rgba(255, 255, 255, 0.07);
+  --line-2: rgba(255, 255, 255, 0.12);
+  --line-3: rgba(255, 255, 255, 0.22);
+
+  /* Type colors: warm paper white, stepped down */
+  --text: #f2efe9;
+  --text-2: #b0aca4;
+  --text-3: #77746e;
+
+  /* One signal accent, used sparingly */
+  --accent: #ff5b24;
+  --accent-hover: #ff7444;
+  --accent-ink: #140803;
+  --accent-soft: rgba(255, 91, 36, 0.14);
+
+  --positive: #8fd694;
+  --negative: #ff8a7a;
+
+  /* Platform hues — only for small selected-state details */
+  --pc: #e9e5de;
+  --ps: #6b95ff;
+  --xbox: #6cc977;
+
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --gutter: clamp(20px, 3.8vw, 64px);
+  --maxw: 1720px;
+  --nav-h: 68px;
+
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

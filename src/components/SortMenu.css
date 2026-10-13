@@ -1,0 +1,91 @@
+.sort {
+  position: relative;
+}
+
+.sort__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  transition:
+    background-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.sort__trigger:hover,
+.sort.is-open .sort__trigger {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px var(--line-3);
+}
+
+.sort__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.sort__chev {
+  color: var(--text-3);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.sort.is-open .sort__chev {
+  transform: rotate(180deg);
+}
+
+.sort__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 220px;
+  padding: 6px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow:
+    inset 0 0 0 1px var(--line-2),
+    0 20px 50px -12px rgba(0, 0, 0, 0.7);
+  animation: sort-in 0.2s var(--ease-out);
+}
+
+@keyframes sort-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.sort__opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  color: var(--text-2);
+  text-align: left;
+}
+
+.sort__opt:hover,
+.sort__opt:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  outline: none;
+}
+
+.sort__opt.is-active {
+  color: var(--text);
+}
+
+.sort__opt svg {
+  color: var(--accent);
+}

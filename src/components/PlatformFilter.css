@@ -1,0 +1,62 @@
+.platform-filter {
+  display: inline-flex;
+  flex: none;
+  padding: 3px;
+  gap: 2px;
+  border-radius: var(--r-md);
+  background: var(--bg-raised);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+.platform-filter__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  white-space: nowrap;
+  transition:
+    background-color 0.22s var(--ease),
+    color 0.22s var(--ease);
+}
+
+.platform-filter__opt:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.platform-filter__glyph {
+  color: var(--text-3);
+  transition: color 0.22s var(--ease);
+}
+
+.platform-filter__count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.platform-filter__opt.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.platform-filter__opt.is-active .platform-filter__count {
+  color: rgba(10, 10, 11, 0.5);
+}
+
+.platform-filter__opt.is-active .platform-filter__glyph {
+  color: var(--bg);
+}
+
+.platform-filter__opt.is-ps.is-active .platform-filter__glyph {
+  color: #2f5fd6;
+}
+
+.platform-filter__opt.is-xbox.is-active .platform-filter__glyph {
+  color: #2f8f3c;
+}
