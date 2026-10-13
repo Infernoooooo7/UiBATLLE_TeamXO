@@ -8,6 +8,7 @@ const LINKS = [
   { id: 'discover', label: 'Discover' },
   { id: 'browse', label: 'Browse' },
   { id: 'deals', label: 'Deals' },
+  { id: 'friends', label: 'Friends' },
 ];
 
 export default function Nav({ view, active, librarySize, onNavigate, onOpenGame, onSearchAll, query, onQueryChange, searchPlatform }) {
@@ -26,7 +27,7 @@ export default function Nav({ view, active, librarySize, onNavigate, onOpenGame,
   };
 
   return (
-    <header className={`nav${scrolled || view === 'library' ? ' is-solid' : ''}`}>
+    <header className={`nav${scrolled || view !== 'store' ? ' is-solid' : ''}`}>
       <div className="nav__inner container">
         <a href="#top" className="brand" onClick={go('discover')} aria-label="Pixel Arena — home">
           <Logo />

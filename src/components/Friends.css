@@ -1,0 +1,572 @@
+/* Friends & Playing Together — desktop. Mirrors the mobile layout's names, statuses and states. */
+.friends {
+  min-height: 100vh;
+  padding-top: calc(var(--nav-h) + 64px);
+  padding-bottom: 120px;
+  animation: fx-view-in 0.5s var(--ease-out) both;
+}
+
+@keyframes fx-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.friends__head {
+  padding-bottom: 32px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+
+.friends__titlebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 14px;
+}
+
+.friends__title {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: clamp(56px, 6vw, 96px);
+  font-stretch: 120%;
+  font-weight: 780;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+
+.friends__total {
+  margin-top: 0.12em;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+.friends__note {
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.friends__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 48px;
+  align-items: start;
+}
+
+.fx-section {
+  margin-top: 56px;
+}
+
+.fx-h {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.fx-h span {
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+/* ---- Pixel avatars ---- */
+.pavatar {
+  position: relative;
+  flex: none;
+  display: inline-block;
+  border-radius: 22%;
+  background: color-mix(in srgb, var(--c) 16%, #111113);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 34%, transparent);
+}
+
+.pavatar svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: var(--c);
+}
+
+.pavatar__dot {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 30%;
+  height: 30%;
+  min-width: 9px;
+  min-height: 9px;
+  max-width: 13px;
+  max-height: 13px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 3px var(--bg-raised);
+}
+
+/* ---- Sessions ---- */
+.fx-sessions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.fx-session {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 360px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  transition: box-shadow 0.3s var(--ease);
+}
+
+.fx-session.is-joined {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 91, 36, 0.6),
+    0 24px 70px -30px rgba(255, 91, 36, 0.55);
+}
+
+.fx-session__art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.fx-session__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.fx-session__art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 10, 11, 0.97) 0, rgba(10, 10, 11, 0.78) 40%, rgba(10, 10, 11, 0.12) 78%);
+}
+
+.fx-session:hover .fx-session__art img {
+  transform: scale(1.03);
+}
+
+.fx-session__body {
+  position: relative;
+  padding: 26px;
+  pointer-events: none;
+}
+
+.fx-session__body button {
+  pointer-events: auto;
+}
+
+.fx-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.fx-live i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--text-3);
+}
+
+.fx-live.is-live i {
+  background: var(--positive);
+  animation: fx-pulse 2.2s ease-in-out infinite;
+}
+
+.fx-session.is-joined .fx-live i {
+  background: var(--accent);
+  animation: none;
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+@keyframes fx-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(143, 214, 148, 0.45);
+  }
+  60% {
+    box-shadow: 0 0 0 7px rgba(143, 214, 148, 0);
+  }
+}
+
+.fx-session__name {
+  margin-top: 12px;
+  font-size: clamp(32px, 2.8vw, 44px);
+  font-stretch: 120%;
+  font-weight: 760;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.fx-session__game {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.fx-session__foot {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fx-stack {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fx-slot {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 22%;
+  border: 1px dashed var(--line-3);
+}
+
+.fx-count {
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.fx-count b {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.fx-session__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.friends .btn:disabled,
+.fx-modal .btn:disabled {
+  cursor: default;
+}
+
+.friends .btn--primary:disabled,
+.fx-modal .btn--primary:disabled {
+  background: var(--surface-3);
+  color: var(--text-3);
+}
+
+.friends .btn--sm,
+.fx-modal .btn--sm {
+  --h: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+/* ---- Friends list ---- */
+.fx-friends {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.fx-friend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition:
+    background-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.fx-friend:hover {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+.fx-friend.is-offline .pavatar svg {
+  opacity: 0.45;
+}
+
+.fx-friend__text,
+.fx-person__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.fx-name {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.fx-meta {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fx-status {
+  font-weight: 600;
+  color: var(--s);
+}
+
+.fx-friend__game {
+  flex: none;
+  width: 32px;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-xs);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--line-2);
+}
+
+.fx-friend__game img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Side panels ---- */
+.friends__side {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+  display: grid;
+  gap: 20px;
+}
+
+.fx-panel {
+  padding: 22px 22px 10px;
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.fx-panel .fx-h {
+  margin-bottom: 6px;
+}
+
+.fx-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.fx-person:first-child {
+  border-top: 0;
+}
+
+.fx-person__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fx-empty {
+  padding: 8px 0 14px;
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+/* ---- Lobby / invite modal ---- */
+.fx-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(5, 5, 6, 0.74);
+  backdrop-filter: blur(6px);
+  animation: fx-fade 0.2s ease both;
+}
+
+.fx-modal__panel {
+  width: min(520px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow:
+    inset 0 0 0 1px var(--line-2),
+    0 40px 120px rgba(0, 0, 0, 0.6);
+  animation: fx-rise 0.35s var(--ease-out) both;
+}
+
+.fx-modal__panel .pavatar__dot {
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+@keyframes fx-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+.fx-modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.fx-modal__title {
+  margin-top: 6px;
+  font-size: 32px;
+  font-stretch: 120%;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.fx-modal__close {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.fx-modal__close:hover {
+  background: var(--surface-3);
+}
+
+.fx-lobby__art {
+  height: 150px;
+  margin: 20px -24px 0;
+  overflow: hidden;
+}
+
+.fx-lobby__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fx-lobby__list {
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.fx-lobby__list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 8px;
+  border-radius: var(--r-md);
+  background: var(--bg-raised);
+  font-weight: 600;
+}
+
+.fx-lobby__list li .pavatar__dot {
+  box-shadow: 0 0 0 3px var(--bg-raised);
+}
+
+.fx-lobby__list em {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-style: normal;
+  color: var(--text-3);
+}
+
+.fx-lobby__list em.is-you {
+  color: var(--accent);
+}
+
+.fx-lobby__list li.is-open {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-weight: 500;
+  color: var(--text-3);
+}
+
+.fx-lobby__list .fx-slot {
+  width: 36px;
+  height: 36px;
+}
+
+.fx-people--modal {
+  margin-top: 12px;
+}
+
+.fx-modal__note {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.fx-modal__actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 1100px) {
+  .friends__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .friends__side {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .fx-sessions,
+  .fx-friends {
+    grid-template-columns: 1fr;
+  }
+}

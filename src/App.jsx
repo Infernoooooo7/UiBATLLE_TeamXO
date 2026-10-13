@@ -5,6 +5,7 @@ import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Discover from './components/Discover';
 import Library from './components/Library';
+import Friends from './components/Friends';
 import GameDetail from './components/GameDetail';
 import TrailerTheater from './components/TrailerTheater';
 import Toasts, { useToasts } from './components/Toasts';
@@ -48,8 +49,8 @@ export default function App() {
   }, [view]);
 
   const navigate = useCallback((id) => {
-    if (id === 'library') {
-      setView('library');
+    if (id === 'library' || id === 'friends') {
+      setView(id);
       setScrollTarget('top-instant');
       return;
     }
@@ -85,7 +86,7 @@ export default function App() {
     [library, navigate, push],
   );
 
-  const active = view === 'library' ? 'library' : section === 'browse' && filters.sale ? 'deals' : section;
+  const active = view !== 'store' ? view : section === 'browse' && filters.sale ? 'deals' : section;
   const detailGame = detailId ? getGame(detailId) : null;
   const trailerGame = trailerId ? getGame(trailerId) : null;
 
@@ -125,6 +126,8 @@ export default function App() {
             onTrailer={setTrailerId}
           />
         </main>
+      ) : view === 'friends' ? (
+        <Friends push={push} onOpen={setDetailId} />
       ) : (
         <Library
           entries={library.entries}
