@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { isModalOpen } from './useModal';
 
-const HOVER_DELAY = 500; // how long the pointer rests on a card before its trailer starts
+const HOVER_DELAY = 500; // how long the pointer rests on a card before its preview opens
 const FADE_OUT = 280; // keep in step with .card__video's fade-out in GameCard.css
 
-// Only one preview plays at a time, across every card on the page.
+// Only one card's preview is open at a time, across the whole page.
 let current = null;
 // Trailers that errored aren't retried this session, and if the browser blocks
-// muted autoplay altogether, previews stay off.
+// muted autoplay altogether, trailers stay off (the info panel still opens).
 const failed = new Set();
 let autoplayBlocked = false;
 
-/** End whichever card preview is running (e.g. when a dialog opens over it). */
-export const stopTrailerPreview = () => current?.stop();
+/** Close whichever card preview is open (e.g. when a dialog opens over it). */
+export const stopTrailerPreview = () => current?.close();
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopTrailerPreview();
@@ -25,14 +25,16 @@ const saveData = () => Boolean(navigator.connection?.saveData);
 const introSkip = (duration) => (duration > 30 ? Math.min(8, duration * 0.15) : 0);
 
 /**
- * Steam-style muted trailer preview for a game card: hover with a mouse for
- * HOVER_DELAY and the trailer fades in over the cover; leave and it fades back
- * out. Touch, reduced motion, Data Saver and missing or broken trailers all keep
- * the plain cover. The <video> only exists while a preview runs, and its
- * download is aborted the moment the preview stops.
+ * Steam-style hover preview for a game card. Rest the mouse on a card for
+ * HOVER_DELAY and `open` turns on (the card shows its info panel) while the
+ * muted trailer fades in over the cover once frames are playing; leave and both
+ * go away. Touch never opens it. Reduced motion, Data Saver and missing or
+ * broken trailers keep the plain cover. The <video> only exists while a
+ * trailer plays, and its download is aborted the moment it stops.
  */
 export function useTrailerPreview(src) {
-  // idle → loading (video mounted, invisible) → playing (faded in) → leaving (fading out) → idle
+  const [open, setOpen] = useState(false);
+  // video: idle → loading (mounted, invisible) → playing (faded in) → leaving (fading out) → idle
   const [phase, setPhase] = useState('idle');
   const [run, setRun] = useState(0); // a fresh <video> element per preview
   const phaseRef = useRef('idle');
@@ -59,10 +61,32 @@ export function useTrailerPreview(src) {
   const owner = useRef(null);
   if (!owner.current) {
     owner.current = {
-      stop() {
-        const t = timers.current;
-        window.clearTimeout(t.intent);
+      open() {
+        if (isModalOpen() || document.hidden) return;
+        if (current && current !== owner.current) current.close();
+        current = owner.current;
+        setOpen(true);
+        const s = srcRef.current;
+        if (s && !failed.has(s) && !autoplayBlocked && !reducedMotion() && !saveData()) owner.current.play();
+      },
+
+      close() {
+        window.clearTimeout(timers.current.intent);
         if (current === owner.current) current = null;
+        setOpen(false);
+        owner.current.stopVideo();
+      },
+
+      play() {
+        const p = phaseRef.current;
+        if (p === 'loading' || p === 'playing') return;
+        window.clearTimeout(timers.current.leave);
+        unload();
+        setRun((n) => n + 1);
+        set('loading');
+      },
+
+      stopVideo() {
         const p = phaseRef.current;
         if (p === 'idle' || p === 'leaving') return;
         if (p === 'loading') {
@@ -74,29 +98,16 @@ export function useTrailerPreview(src) {
         // freeze the frame and let it fade back to the cover
         videoRef.current?.pause();
         set('leaving');
-        t.leave = window.setTimeout(() => {
+        timers.current.leave = window.setTimeout(() => {
           unload();
           set('idle');
         }, FADE_OUT);
       },
 
-      start() {
-        const s = srcRef.current;
-        if (!s || failed.has(s) || autoplayBlocked || isModalOpen() || document.hidden) return;
-        const p = phaseRef.current;
-        if (p === 'loading' || p === 'playing') return;
-        if (current && current !== owner.current) current.stop();
-        current = owner.current;
-        window.clearTimeout(timers.current.leave);
-        unload();
-        setRun((n) => n + 1);
-        set('loading');
-      },
-
       fail(blocked) {
         if (blocked) autoplayBlocked = true;
         else if (srcRef.current) failed.add(srcRef.current);
-        owner.current.stop();
+        owner.current.stopVideo();
       },
     };
   }
@@ -132,17 +143,18 @@ export function useTrailerPreview(src) {
 
   const onPointerEnter = (e) => {
     // mouse only: touch has no hover, and never autoplays
-    if (e.pointerType !== 'mouse' || !srcRef.current || reducedMotion() || saveData()) return;
+    if (e.pointerType !== 'mouse') return;
     window.clearTimeout(timers.current.intent);
-    timers.current.intent = window.setTimeout(ctl.start, HOVER_DELAY);
+    timers.current.intent = window.setTimeout(ctl.open, HOVER_DELAY);
   };
 
   return {
+    open,
     mounted: phase !== 'idle',
     playing: phase === 'playing',
     run,
-    stop: ctl.stop,
-    triggers: { onPointerEnter, onPointerLeave: ctl.stop },
+    close: ctl.close,
+    triggers: { onPointerEnter, onPointerLeave: ctl.close },
     videoProps: {
       ref: attach,
       src,
