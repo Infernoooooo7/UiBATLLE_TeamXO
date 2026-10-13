@@ -1,0 +1,40 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text);
+  line-height: 1;
+}
+
+.logo__xo {
+  font-size: 30px;
+  font-stretch: 62%;
+  font-weight: 820;
+  letter-spacing: -0.01em;
+}
+
+.logo__o {
+  color: var(--accent);
+}
+
+.logo__rule {
+  width: 1px;
+  height: 22px;
+  margin: 0 14px 0 13px;
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.logo__store {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  /* optical balance: tracking leaves trailing space after the last letter */
+  margin-right: -0.26em;
+}
+
+@media (max-width: 560px) {
+  .logo__rule,
+  .logo__store {
+    display: none;
+  }
+}

@@ -1,4 +1,4 @@
-# Backlog — game storefront (Team XO)
+# XO Store — game storefront (Team XO)
 
 A storefront concept for PC, PlayStation and Xbox games. Built with React + Vite and plain CSS. There's no backend: everything runs client-side.
 

@@ -40,16 +40,7 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   color: var(--text);
-}
-
-.brand__word {
-  font-stretch: 125%;
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .nav__links {
@@ -159,7 +150,6 @@
 }
 
 @media (max-width: 560px) {
-  .brand__word,
   .nav__library > span:not(.nav__count) {
     display: none;
   }

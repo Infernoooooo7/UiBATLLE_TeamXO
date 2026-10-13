@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { BrandMark, IconLibrary } from './Icons';
+import { IconLibrary } from './Icons';
+import Logo from './Logo';
 import Search from './Search';
 import './Nav.css';
 
@@ -27,9 +28,8 @@ export default function Nav({ view, active, librarySize, onNavigate, onOpenGame,
   return (
     <header className={`nav${scrolled || view === 'library' ? ' is-solid' : ''}`}>
       <div className="nav__inner container">
-        <a href="#top" className="brand" onClick={go('discover')} aria-label="Backlog store — home">
-          <BrandMark />
-          <span className="brand__word">Backlog</span>
+        <a href="#top" className="brand" onClick={go('discover')} aria-label="XO Store — home">
+          <Logo />
         </a>
 
         <nav className="nav__links" aria-label="Store">

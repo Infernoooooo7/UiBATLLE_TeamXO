@@ -128,11 +128,3 @@ export const XboxGlyph = (p) => (
 
 export const PLATFORM_GLYPH = { pc: PcGlyph, ps: PsGlyph, xbox: XboxGlyph };
 
-/* Brand mark: a pile of games */
-export const BrandMark = (p) => (
-  <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false" {...p}>
-    <rect x="4" y="3" width="11" height="4" rx="0.6" fill="var(--accent)" />
-    <rect x="6.5" y="9" width="12.5" height="4" rx="0.6" fill="currentColor" />
-    <rect x="2.5" y="15" width="13.5" height="4" rx="0.6" fill="currentColor" />
-  </svg>
-);
