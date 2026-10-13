@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "routes": [
+    { "src": "/mobile/?", "status": 308, "headers": { "Location": "/" } },
+    {
+      "src": "/",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(Mobi|iPhone|iPod|Android|Opera Mini|IEMobile|BlackBerry|webOS).*" }],
+      "headers": { "Vary": "User-Agent", "Cache-Control": "public, max-age=0, must-revalidate" },
+      "dest": "/mobile/index.html"
+    },
+    { "src": "/", "headers": { "Vary": "User-Agent", "Cache-Control": "public, max-age=0, must-revalidate" }, "continue": true },
+    { "handle": "filesystem" }
+  ]
+}
