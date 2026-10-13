@@ -28,7 +28,7 @@ export default function Nav({ view, active, librarySize, onNavigate, onOpenGame,
   return (
     <header className={`nav${scrolled || view === 'library' ? ' is-solid' : ''}`}>
       <div className="nav__inner container">
-        <a href="#top" className="brand" onClick={go('discover')} aria-label="XO Store — home">
+        <a href="#top" className="brand" onClick={go('discover')} aria-label="Pixel Arena — home">
           <Logo />
         </a>
 
