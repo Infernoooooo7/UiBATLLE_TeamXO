@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FEATURED, getGame } from './data/catalog';
 import { useLibrary } from './hooks/useLibrary';
+import { stopTrailerPreview } from './hooks/useTrailerPreview';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Discover from './components/Discover';
@@ -47,6 +48,11 @@ export default function App() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [view]);
+
+  // A dialog opening (e.g. from search) ends any card's hover preview underneath it
+  useEffect(() => {
+    if (detailId || trailerId) stopTrailerPreview();
+  }, [detailId, trailerId]);
 
   const navigate = useCallback((id) => {
     if (id === 'library' || id === 'friends') {
