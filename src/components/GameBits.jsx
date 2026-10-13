@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { PLATFORMS, finalPrice, formatPrice } from '../data/catalog';
 import { IconCheck, IconPlus, PLATFORM_GLYPH } from './Icons';
 import './GameBits.css';
@@ -31,12 +32,25 @@ export function Price({ game, size = 'md', className = '' }) {
   );
 }
 
-/** Primary add/remove control. Hovering an owned game reveals "Remove". */
+/**
+ * Primary add/remove control. Hovering an owned game reveals "Remove" —
+ * but not straight after adding it, while the pointer is still on the button.
+ */
 export function LibraryButton({ game, owned, onToggle, size, block = false, withPrice = true }) {
-  const cls = `btn ${owned ? 'btn--owned' : 'btn--primary'}${size === 'lg' ? ' btn--lg' : ''}${block ? ' btn--block' : ''} lib-btn`;
+  const [justAdded, setJustAdded] = useState(false);
+  const cls = `btn ${owned ? 'btn--owned' : 'btn--primary'}${size === 'lg' ? ' btn--lg' : ''}${block ? ' btn--block' : ''} lib-btn${justAdded ? ' is-fresh' : ''}`;
   if (owned) {
     return (
-      <button type="button" className={cls} onClick={() => onToggle(game)} aria-pressed="true">
+      <button
+        type="button"
+        className={cls}
+        onClick={() => {
+          setJustAdded(false);
+          onToggle(game);
+        }}
+        onMouseLeave={() => setJustAdded(false)}
+        aria-pressed="true"
+      >
         <IconCheck />
         <span className="lib-btn__owned">In your library</span>
         <span className="lib-btn__remove">Remove from library</span>
@@ -45,7 +59,15 @@ export function LibraryButton({ game, owned, onToggle, size, block = false, with
   }
   const price = finalPrice(game);
   return (
-    <button type="button" className={cls} onClick={() => onToggle(game)} aria-pressed="false">
+    <button
+      type="button"
+      className={cls}
+      onClick={() => {
+        setJustAdded(true);
+        onToggle(game);
+      }}
+      aria-pressed="false"
+    >
       <IconPlus />
       {game.free ? 'Add free game' : 'Add to library'}
       {withPrice && !game.free && (

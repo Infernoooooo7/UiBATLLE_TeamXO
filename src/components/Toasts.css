@@ -88,3 +88,7 @@
 .toast__close:hover {
   color: var(--text);
 }
+
+.toast__action:active {
+  transform: translateY(1px);
+}

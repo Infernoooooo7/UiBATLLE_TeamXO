@@ -254,3 +254,20 @@
     gap: 12px;
   }
 }
+
+.chart__row:has(.chart__hit:focus-visible) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.chart__row:has(.chart__hit:active) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.chart__hit:focus-visible,
+.spot__hit:focus-visible {
+  outline-offset: -2px;
+}
+
+.spot:has(.spot__hit:focus-visible) .spot__img {
+  transform: scale(1.03);
+}

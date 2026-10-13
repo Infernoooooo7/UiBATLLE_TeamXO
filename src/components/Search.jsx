@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { GAMES, TRENDING, searchGames } from '../data/catalog';
+import { GAMES, TRENDING, filterGames, platformLabel } from '../data/catalog';
+import { isModalOpen } from '../hooks/useModal';
 import { IconArrowRight, IconSearch } from './Icons';
 import { Price } from './GameBits';
 import './Search.css';
+
+const IS_MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
 function Highlight({ text, query }) {
   const q = query.trim();
@@ -17,25 +20,32 @@ function Highlight({ text, query }) {
   );
 }
 
-export default function Search({ onOpenGame, onSearchAll }) {
-  const [query, setQuery] = useState('');
+/**
+ * The query is owned by App: typing filters the catalog instantly,
+ * together with the active platform filter.
+ */
+export default function Search({ query, onQueryChange, platform = 'all', onOpenGame, onSearchAll }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(-1);
   const inputRef = useRef(null);
   const wrapRef = useRef(null);
 
   const q = query.trim();
-  const matches = useMemo(() => (q ? searchGames(GAMES, q) : []), [q]);
+  const matches = useMemo(() => (q ? filterGames(GAMES, { platform, query: q }) : []), [q, platform]);
   const results = q ? matches.slice(0, 6) : TRENDING.slice(0, 5);
+  const where = platform !== 'all' ? ` on ${platformLabel(platform)}` : '';
 
-  // "/" focuses search from anywhere
+  // "/" or Ctrl/Cmd+K focuses search from anywhere (except inside a dialog)
   useEffect(() => {
     const onKey = (e) => {
+      const isK = e.key.toLowerCase() === 'k' && (IS_MAC ? e.metaKey : e.ctrlKey);
       const tag = document.activeElement?.tagName;
-      if (e.key === '/' && !e.metaKey && !e.ctrlKey && !['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
+      const isSlash = e.key === '/' && !e.metaKey && !e.ctrlKey && !['INPUT', 'TEXTAREA', 'SELECT'].includes(tag);
+      if (!isK && !isSlash) return;
+      if (isModalOpen()) return;
+      e.preventDefault();
+      inputRef.current?.focus();
+      inputRef.current?.select();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -49,6 +59,11 @@ export default function Search({ onOpenGame, onSearchAll }) {
     document.addEventListener('pointerdown', onDown);
     return () => document.removeEventListener('pointerdown', onDown);
   }, [open]);
+
+  // keep the highlighted row valid as results change
+  useEffect(() => {
+    setIndex((i) => Math.min(i, results.length - 1));
+  }, [results.length]);
 
   const close = () => {
     setOpen(false);
@@ -81,8 +96,10 @@ export default function Search({ onOpenGame, onSearchAll }) {
       else showAll();
     } else if (e.key === 'Escape') {
       e.stopPropagation();
-      if (query) setQuery('');
-      else close();
+      if (query) {
+        onQueryChange('');
+        setIndex(-1);
+      } else close();
     }
   };
 
@@ -97,7 +114,7 @@ export default function Search({ onOpenGame, onSearchAll }) {
           value={query}
           placeholder="Search games, studios, genres"
           onChange={(e) => {
-            setQuery(e.target.value);
+            onQueryChange(e.target.value);
             setIndex(-1);
             setOpen(true);
           }}
@@ -107,6 +124,7 @@ export default function Search({ onOpenGame, onSearchAll }) {
           aria-expanded={open}
           aria-controls="search-results"
           aria-autocomplete="list"
+          aria-keyshortcuts={IS_MAC ? 'Meta+K /' : 'Control+K /'}
           aria-activedescendant={index >= 0 && results[index] ? `sr-${results[index].id}` : undefined}
           autoComplete="off"
           spellCheck={false}
@@ -116,21 +134,24 @@ export default function Search({ onOpenGame, onSearchAll }) {
             type="button"
             className="search__clear"
             onClick={() => {
-              setQuery('');
+              onQueryChange('');
+              setIndex(-1);
               inputRef.current?.focus();
             }}
           >
             Clear
           </button>
         ) : (
-          <kbd className="search__kbd" aria-hidden="true">/</kbd>
+          <kbd className="search__kbd" aria-hidden="true">
+            {IS_MAC ? '⌘K' : 'Ctrl K'}
+          </kbd>
         )}
       </label>
 
       {open && (
         <div className="search__panel">
           <p className="search__label eyebrow">
-            {q ? (matches.length ? `${matches.length} match${matches.length > 1 ? 'es' : ''}` : 'No matches') : 'Trending now'}
+            {q ? (matches.length ? `${matches.length} match${matches.length > 1 ? 'es' : ''}${where}` : `No matches${where}`) : 'Trending now'}
           </p>
 
           {results.length > 0 && (
@@ -163,7 +184,8 @@ export default function Search({ onOpenGame, onSearchAll }) {
 
           {q && matches.length === 0 && (
             <p className="search__empty">
-              Nothing matches “{q}”. Try a studio like <em>FromSoftware</em> or a genre like <em>horror</em>.
+              Nothing matches “{q}”{where}. Try a studio like <em>FromSoftware</em> or a genre like <em>horror</em>
+              {where && ', or switch the platform filter to All'}.
             </p>
           )}
 

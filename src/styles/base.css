@@ -84,6 +84,12 @@ ul {
 
 body.is-locked {
   overflow: hidden;
+  padding-right: var(--lock-gap, 0px);
+}
+
+/* a failed image shows the surface behind it, never a broken-image icon */
+img[data-broken] {
+  visibility: hidden;
 }
 
 .container {
@@ -255,4 +261,8 @@ body.is-locked {
 
 .skip-link:focus {
   transform: none;
+}
+
+.icon-btn:active {
+  transform: scale(0.94);
 }

@@ -25,6 +25,11 @@
   animation: theater-in 0.5s var(--ease-out) both;
 }
 
+.theater.is-closing .theater__controls,
+.theater.is-closing .theater__loading {
+  visibility: hidden;
+}
+
 .theater.is-closing .theater__frame {
   animation: fade-out 0.22s var(--ease) both;
 }
@@ -324,4 +329,12 @@
   .theater__fallback-title {
     font-size: 20px;
   }
+}
+
+.theater__btn:active {
+  transform: scale(0.92);
+}
+
+.theater__close:active {
+  transform: translateY(1px);
 }

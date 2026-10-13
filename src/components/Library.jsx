@@ -50,7 +50,7 @@ export default function Library({ entries, isOwned, onOpen, onToggleLibrary, onB
   const suggestions = useMemo(() => TRENDING.filter((g) => !isOwned(g.id)).slice(0, 6), [isOwned]);
 
   return (
-    <main className="library">
+    <main className="library" id="main">
       <div className="container">
         <header className="library__head">
           <p className="eyebrow">Your collection</p>

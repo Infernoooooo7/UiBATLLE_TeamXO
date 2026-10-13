@@ -154,3 +154,15 @@
     display: none;
   }
 }
+
+body.is-locked .nav {
+  padding-right: var(--lock-gap, 0px);
+}
+
+.nav__link:active {
+  color: var(--text);
+}
+
+.nav__library:active {
+  transform: translateY(1px);
+}

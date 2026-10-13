@@ -324,3 +324,12 @@
     display: none;
   }
 }
+
+.rail-item:active {
+  opacity: 1;
+}
+
+.rail-item:focus-visible {
+  opacity: 1;
+  outline-offset: 6px;
+}

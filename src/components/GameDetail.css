@@ -456,3 +456,17 @@
     grid-template-columns: 1fr;
   }
 }
+
+.detail__close:active,
+.gallery__play:active {
+  transform: translateY(1px);
+}
+
+.gallery__thumb:active {
+  opacity: 1;
+}
+
+.gallery__thumb:focus-visible {
+  opacity: 1;
+  outline-offset: 2px;
+}

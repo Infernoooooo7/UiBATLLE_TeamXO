@@ -11,12 +11,15 @@ export default function GameDetail({ game, owned, onToggleLibrary, onTrailer, on
   const closeRef = useRef(null);
   const shots = game.art.shots;
 
+  const closingRef = useRef(false);
   const requestClose = () => {
-    if (closing) return;
+    if (closingRef.current) return;
+    closingRef.current = true;
+    release();
     setClosing(true);
     window.setTimeout(onClose, 220);
   };
-  useModal(requestClose, closeRef);
+  const release = useModal(requestClose, closeRef);
 
   return (
     <div className={`modal${closing ? ' is-closing' : ''}`} role="dialog" aria-modal="true" aria-labelledby="detail-title">

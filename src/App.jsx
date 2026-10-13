@@ -63,6 +63,8 @@ export default function App() {
     }
   }, []);
 
+  const setQuery = useCallback((query) => setFilters((f) => ({ ...f, query })), []);
+
   const searchAll = useCallback((query) => {
     setView('store');
     setFilters((f) => ({ ...f, query, genre: 'all', sale: false }));
@@ -89,8 +91,8 @@ export default function App() {
 
   return (
     <>
-      <a className="skip-link" href="#browse">
-        Skip to catalog
+      <a className="skip-link" href="#main">
+        Skip to content
       </a>
       <Nav
         view={view}
@@ -99,10 +101,13 @@ export default function App() {
         onNavigate={navigate}
         onOpenGame={setDetailId}
         onSearchAll={searchAll}
+        query={filters.query}
+        onQueryChange={setQuery}
+        searchPlatform={view === 'store' ? filters.platform : 'all'}
       />
 
       {view === 'store' ? (
-        <main>
+        <main id="main">
           <Hero
             games={FEATURED}
             isOwned={library.has}

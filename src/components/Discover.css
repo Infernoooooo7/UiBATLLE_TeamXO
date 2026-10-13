@@ -262,3 +262,28 @@
     align-items: flex-start;
   }
 }
+
+/* keep focus rings inside the horizontally scrolling genre strip */
+.genres__opt:focus-visible {
+  outline-offset: -2px;
+}
+
+.genres__opt:active,
+.sale-toggle:active {
+  color: var(--text);
+}
+
+.sale-toggle:active .sale-toggle__box {
+  transform: scale(0.88);
+}
+
+.sale-toggle__box {
+  transition:
+    background-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease),
+    transform 0.12s var(--ease);
+}
+
+.token:active {
+  transform: translateY(1px);
+}

@@ -10,7 +10,7 @@ const LINKS = [
   { id: 'deals', label: 'Deals' },
 ];
 
-export default function Nav({ view, active, librarySize, onNavigate, onOpenGame, onSearchAll }) {
+export default function Nav({ view, active, librarySize, onNavigate, onOpenGame, onSearchAll, query, onQueryChange, searchPlatform }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -47,7 +47,13 @@ export default function Nav({ view, active, librarySize, onNavigate, onOpenGame,
         </nav>
 
         <div className="nav__end">
-          <Search onOpenGame={onOpenGame} onSearchAll={onSearchAll} />
+          <Search
+            query={query}
+            onQueryChange={onQueryChange}
+            platform={searchPlatform}
+            onOpenGame={onOpenGame}
+            onSearchAll={onSearchAll}
+          />
           <button
             type="button"
             className={`nav__library${active === 'library' ? ' is-active' : ''}`}

@@ -89,3 +89,7 @@
 .sort__opt svg {
   color: var(--accent);
 }
+
+.sort__trigger:active {
+  transform: translateY(1px);
+}

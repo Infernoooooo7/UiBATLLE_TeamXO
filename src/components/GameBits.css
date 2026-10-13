@@ -70,10 +70,10 @@
   display: none;
 }
 
-.lib-btn.btn--owned:hover .lib-btn__owned {
+.lib-btn.btn--owned:not(.is-fresh):hover .lib-btn__owned {
   display: none;
 }
 
-.lib-btn.btn--owned:hover .lib-btn__remove {
+.lib-btn.btn--owned:not(.is-fresh):hover .lib-btn__remove {
   display: inline;
 }

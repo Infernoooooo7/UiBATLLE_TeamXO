@@ -22,13 +22,26 @@ export default function TrailerTheater({ game, onClose }) {
   const stageRef = useRef(null);
   const idleTimer = useRef(0);
 
+  const closingRef = useRef(false);
+
+  // Stop playback and abort the download so nothing keeps playing or loading
+  const stopVideo = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    v.removeAttribute('src');
+    v.load();
+  };
+
   const requestClose = () => {
-    if (closing) return;
-    videoRef.current?.pause();
+    if (closingRef.current) return;
+    closingRef.current = true;
+    release();
+    stopVideo();
     setClosing(true);
     window.setTimeout(onClose, 220);
   };
-  useModal(requestClose, stageRef);
+  const release = useModal(requestClose, stageRef);
 
   const toggle = () => {
     const v = videoRef.current;
@@ -61,21 +74,22 @@ export default function TrailerTheater({ game, onClose }) {
   useEffect(() => {
     if (failed) return undefined;
     const onKey = (e) => {
-      // let focused controls handle their own keys natively
-      if (e.target instanceof HTMLElement && ['INPUT', 'BUTTON', 'A'].includes(e.target.tagName)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey || closingRef.current) return;
       const v = videoRef.current;
       if (!v) return;
+      const tag = e.target instanceof HTMLElement ? e.target.tagName : '';
       if (e.key === ' ' || e.key === 'k') {
+        // a focused button/link already activates itself on Space
+        if (tag === 'BUTTON' || tag === 'A') return;
         e.preventDefault();
         toggle();
       } else if (e.key === 'm') {
         v.muted = !v.muted;
       } else if (e.key === 'f') {
         fullscreen();
-      } else if (e.key === 'ArrowRight') {
-        seek(v.currentTime + 5);
-      } else if (e.key === 'ArrowLeft') {
-        seek(v.currentTime - 5);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault(); // also overrides the scrubber's tiny native step
+        seek(v.currentTime + (e.key === 'ArrowRight' ? 5 : -5));
       } else return;
       wake();
     };
@@ -144,7 +158,11 @@ export default function TrailerTheater({ game, onClose }) {
                 playsInline
                 preload="auto"
                 onClick={toggle}
-                onPlay={() => setPlaying(true)}
+                onPlay={(e) => {
+                  // only ever one trailer playing
+                  document.querySelectorAll('video').forEach((other) => other !== e.currentTarget && other.pause());
+                  setPlaying(true);
+                }}
                 onPause={() => setPlaying(false)}
                 onWaiting={() => setWaiting(true)}
                 onPlaying={() => setWaiting(false)}
@@ -153,7 +171,9 @@ export default function TrailerTheater({ game, onClose }) {
                 onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
                 onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
                 onEnded={() => setIdle(false)}
-                onError={() => setFailed(true)}
+                onError={() => {
+                  if (!closingRef.current) setFailed(true);
+                }}
               />
 
               {waiting && (
@@ -163,7 +183,7 @@ export default function TrailerTheater({ game, onClose }) {
                 </div>
               )}
 
-              {!playing && !waiting && (
+              {!playing && !waiting && !closing && (
                 <button type="button" className="theater__bigplay" onClick={toggle} aria-label="Play trailer">
                   <IconPlay width={26} height={26} />
                 </button>

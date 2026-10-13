@@ -177,3 +177,27 @@
   padding-top: 12px;
   border-top: 1px solid var(--line);
 }
+
+/* pressing the card (not its inner buttons) */
+.card:has(.card__hit:active) .card__media {
+  transform: translateY(-1px) scale(0.992);
+  transition-duration: 0.12s;
+}
+
+/* keyboard focus mirrors hover */
+.card:has(.card__hit:focus-visible) .card__media {
+  transform: translateY(-3px);
+}
+
+.card:has(.card__hit:focus-visible) .card__media::after {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+}
+
+.card:has(:focus-visible) .card__lib {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+.card__lib:active {
+  transform: translateY(-3px) scale(0.9);
+}
